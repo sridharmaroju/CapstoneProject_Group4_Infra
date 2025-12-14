@@ -8,16 +8,16 @@ resource "aws_api_gateway_deployment" "api" {
   # checkov:skip=CKV_AWS_217: Ensure Create before destroy for API deployments - Not Compliant
   rest_api_id = aws_api_gateway_rest_api.api.id
   depends_on = [
-    aws_api_gateway_method.topup_post,
-    aws_api_gateway_integration.topup_integration,
+    # aws_api_gateway_method.topup_post,
+    # aws_api_gateway_integration.topup_integration,
     aws_api_gateway_method.add_post,
     aws_api_gateway_integration.add_card_integration,
   ]
 
   triggers = {
     redeployment = sha1(jsonencode([
-      aws_api_gateway_method.topup_post.id,
-      aws_api_gateway_integration.topup_integration.id,
+      #   aws_api_gateway_method.topup_post.id,
+      #   aws_api_gateway_integration.topup_integration.id,
       aws_api_gateway_method.add_post.id,
       aws_api_gateway_integration.add_card_integration.id
     ]))
@@ -44,34 +44,34 @@ resource "aws_api_gateway_stage" "api_stage" {
   deployment_id = aws_api_gateway_deployment.api.id
 }
 
-resource "aws_api_gateway_domain_name" "custom" {
-  # checkov:skip=CKV_AWS_206:Ensure API Gateway Domain uses a modern security Policy - Not Compliant
-  domain_name              = "api.${var.name_prefix}.${local.workspace_safe}.${var.domain}"
-  regional_certificate_arn = module.acm.acm_certificate_arn
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
-}
+# resource "aws_api_gateway_domain_name" "custom" {
+#   # checkov:skip=CKV_AWS_206:Ensure API Gateway Domain uses a modern security Policy - Not Compliant
+#   domain_name              = "api.${var.name_prefix}.${local.workspace_safe}.${var.domain}"
+#   regional_certificate_arn = module.acm.acm_certificate_arn
+#   endpoint_configuration {
+#     types = ["REGIONAL"]
+#   }
+# }
 
-resource "aws_api_gateway_base_path_mapping" "mapping" {
-  depends_on  = [data.aws_api_gateway_domain_name.custom_ready]
-  count       = (contains(["dev", "prod"], local.workspace_safe) || startswith(local.workspace_safe, "sandbox-")) ? 1 : 0
-  api_id      = aws_api_gateway_rest_api.api.id
-  stage_name  = aws_api_gateway_stage.api_stage[0].stage_name
-  domain_name = aws_api_gateway_domain_name.custom.domain_name
-  base_path   = local.workspace_safe
+# resource "aws_api_gateway_base_path_mapping" "mapping" {
+#   depends_on  = [data.aws_api_gateway_domain_name.custom_ready]
+#   count       = (contains(["dev", "prod"], local.workspace_safe) || startswith(local.workspace_safe, "sandbox-")) ? 1 : 0
+#   api_id      = aws_api_gateway_rest_api.api.id
+#   stage_name  = aws_api_gateway_stage.api_stage[0].stage_name
+#   domain_name = aws_api_gateway_domain_name.custom.domain_name
+#   base_path   = local.workspace_safe
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
-resource "aws_api_gateway_authorizer" "cognito" {
-  name                   = "cognito-authorizer"
-  rest_api_id            = aws_api_gateway_rest_api.api.id
-  authorizer_uri         = "" # Not needed for Cognito, see next
-  authorizer_credentials = null
-  type                   = "COGNITO_USER_POOLS"
-  provider_arns          = [aws_cognito_user_pool.user_pool.arn]
-  identity_source        = "method.request.header.Authorization"
-}
+# resource "aws_api_gateway_authorizer" "cognito" {
+#   name                   = "cognito-authorizer"
+#   rest_api_id            = aws_api_gateway_rest_api.api.id
+#   authorizer_uri         = "" # Not needed for Cognito, see next
+#   authorizer_credentials = null
+#   type                   = "COGNITO_USER_POOLS"
+#   provider_arns          = [aws_cognito_user_pool.user_pool.arn]
+#   identity_source        = "method.request.header.Authorization"
+# }

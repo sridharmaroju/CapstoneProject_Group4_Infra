@@ -21,7 +21,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_NTU }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Settings Environment Variables 
+    - name: Settings Environment Variables
+      env:
+        AZs: '${{ vars.AZs }}'
       run: |
         BRANCH="${{ github.ref_name }}"
         ACTOR="${{ github.actor }}"
@@ -43,10 +45,12 @@ jobs:
         echo "Using Terraform workspace: $WORKSPACE"
         echo "Using Terraform backend key: $BACKEND_KEY"
         echo "using Allowed Origin: $ALLOWED_ORIGIN"
+        echo "using Azs: $AZs"
 
         echo "WORKSPACE=$WORKSPACE" >> $GITHUB_ENV
         echo "BACKEND_KEY=$BACKEND_KEY" >> $GITHUB_ENV
         echo "ALLOWED_ORIGIN=$ALLOWED_ORIGIN" >> $GITHUB_ENV
+        echo "AZs=$AZs" >> $GITHUB_ENV
 
     - name: Terraform Init
       env:
@@ -63,4 +67,4 @@ jobs:
         terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
     - name: Terraform Destroy
-      run: terraform destroy -auto-approve -var "allowed_origin=$ALLOWED_ORIGIN"
+      run: terraform destroy -auto-approve -var "allowed_origin=$ALLOWED_ORIGIN" -var "azs=$AZs"
