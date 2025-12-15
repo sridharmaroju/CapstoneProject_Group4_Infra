@@ -19,7 +19,7 @@
 ## INSTRUCTIONS
 * **Kindly read the output of CD and add the above REPO SECRETS asl well as REPO VARIABLES**
 
-## As of 14th December 2025, the following components have been DONE
+## As of 15th December 2025, the following components have been DONE
 * S3 bucket for website
 * Cloudfront Distribution linked to S3 as Origin
 * Cognito for Authorization
@@ -27,20 +27,15 @@
 * VPC
 * Secret Manager
 * Add Card API ---> Add Card SQS ---> Add Card Lambda ---> MySQL RDS
+* EC2 Jump Host for Setting up and Manage RDS via Terraform
 
 ## TO-DO
 * Topup Card API ---> Topup Card SQS ---> Top up Card Lambda ---> MySQL RDS
 * Deduct Card API ---> Deduct Card SQS ---> Deduct Card Lambda ---> MySQL RDS
 * Transaction History API ---> Transaction History Lambda ---> MySQL RDS
-* Setting up EC2 Jump Host for Setting up and Manage RDS via Terraform
 
-## CARDS Creation SQL
-CREATE TABLE CARDS (
-    CARD_ID VARCHAR(36) NOT NULL,
-    USER_ID VARCHAR(36) NOT NULL,
-    BALANCE DOUBLE NOT NULL DEFAULT 0.00,
-    PRIMARY KEY (CARD_ID)
-);
+## TABLES SCHEMA
+![Tables Schema](/images/Tables.JPG "Table Schema.")
 
 ## SOME INSTRUCTION
 * After running the CD on your own branch in your own repo, kindly check AWS Secret Manager for mySql username and password to login and other information such as Database Name.

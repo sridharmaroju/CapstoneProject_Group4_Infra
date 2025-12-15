@@ -37,3 +37,21 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {
   id = module.vpc.vpc_id
 }
+
+data "aws_ami" "ubuntu" {
+  # checkov:skip=CKV_AWS_386: "Reduce potential for WhoAMI cloud image name confusion attack"
+
+  most_recent = true
+
+  owners = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-kernel-6.1-x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}

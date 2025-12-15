@@ -33,6 +33,7 @@ resource "aws_api_gateway_integration" "add_card_integration" {
 
   type                    = "AWS"
   integration_http_method = "POST"
+  passthrough_behavior    = "WHEN_NO_MATCH"
 
   uri = "arn:aws:apigateway:${data.aws_region.current.name}:sqs:path/${data.aws_caller_identity.current.account_id}/${aws_sqs_queue.addcard_queue.name}"
 
@@ -47,6 +48,14 @@ resource "aws_api_gateway_integration" "add_card_integration" {
 Action=SendMessage&MessageBody=$util.urlEncode($input.body)
 EOF
   }
+}
+
+# Ensure you have this corresponding method response resource defined
+resource "aws_api_gateway_method_response" "add_post_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.add.id
+  http_method = aws_api_gateway_method.add_post.http_method
+  status_code = "200"
 }
 
 resource "aws_api_gateway_integration_response" "add_card_integration_response" {
@@ -71,16 +80,11 @@ resource "aws_api_gateway_integration_response" "add_card_integration_response" 
                             EOF
   }
 
-  #   # NOTE: You may also need to define the method response if you haven't already:
-  #   depends_on = [
-  #     aws_api_gateway_method_response.add_post_response_200
-  #   ]
+  # NOTE: You may also need to define the method response if you haven't already:
+  depends_on = [
+    aws_api_gateway_method_response.add_post_response_200,
+    aws_api_gateway_integration.add_card_integration
+  ]
 }
 
-# Ensure you have this corresponding method response resource defined
-resource "aws_api_gateway_method_response" "add_post_response_200" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  resource_id = aws_api_gateway_resource.add.id
-  http_method = aws_api_gateway_method.add_post.http_method
-  status_code = "200"
-}
+
