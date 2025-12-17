@@ -24,7 +24,7 @@ resource "aws_lambda_function" "addcard_lambda" {
 
   vpc_config {
     subnet_ids         = module.vpc.private_subnets
-    security_group_ids = [aws_security_group.lambda_sg.id]
+    security_group_ids = [aws_security_group.addcard_lambda_sg.id]
   }
 
   # IMPORTANT: Ignore changes to code so CI/CD can overwrite
@@ -34,6 +34,8 @@ resource "aws_lambda_function" "addcard_lambda" {
       source_code_hash
     ]
   }
+
+  depends_on = [aws_db_instance.mysql]
 }
 
 resource "aws_cloudwatch_log_group" "addcard_lambda_log" {
@@ -43,9 +45,9 @@ resource "aws_cloudwatch_log_group" "addcard_lambda_log" {
   retention_in_days = 7
 }
 
-resource "aws_security_group" "lambda_sg" {
+resource "aws_security_group" "addcard_lambda_sg" {
   # checkov:skip=CKV_AWS_23: "Ensure every security group and rule has a description"
-  name        = "${var.name_prefix}-lambda-sg-${local.workspace_safe}"
+  name        = "${var.name_prefix}-add-card-lambda-sg-${local.workspace_safe}"
   description = "Security group for Lambda functions"
   vpc_id      = module.vpc.vpc_id
 
@@ -57,7 +59,7 @@ resource "aws_security_group" "lambda_sg" {
   }
 
   tags = {
-    Name = "lambda-sg"
+    Name = "l${var.name_prefix}-add-card-lambda-sg-${local.workspace_safe}"
   }
 }
 
@@ -67,14 +69,6 @@ resource "aws_security_group_rule" "egress_lambda_to_sm_endpoint" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  security_group_id = aws_security_group.lambda_sg.id
+  security_group_id = aws_security_group.addcard_lambda_sg.id
   cidr_blocks       = ["10.0.0.0/16"] # or the VPC CIDR
 }
-
-# resource "aws_lambda_permission" "apigw_invoke_add_card" {
-#   statement_id  = "AllowAPIGatewayInvokeFor-${local.workspace_safe}"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.addcard_lambda.function_name
-#   principal     = "apigateway.amazonaws.com"
-#   source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/POST/card/*/add"
-# }

@@ -5,7 +5,7 @@ resource "aws_vpc_endpoint" "logs" {
   service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.vpc.private_subnets
-  security_group_ids  = [aws_security_group.lambda_sg.id]
+  security_group_ids  = [aws_security_group.addcard_lambda_sg.id, aws_security_group.getCards_lambda_sg.id, aws_security_group.getTransactionHistory_lambda_sg.id]
   private_dns_enabled = true
 }
 
@@ -26,14 +26,36 @@ resource "aws_security_group" "secrets_endpoint_sg" {
 }
 
 # Ingress rule to allow Lambda SG to connect
-resource "aws_security_group_rule" "ingress_lambda_to_sm_endpoint" {
+resource "aws_security_group_rule" "ingress_addcard_lambda_to_sm_endpoint" {
   # checkov:skip=CKV_AWS_23: "Ensure every security group and rule has a description"
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.secrets_endpoint_sg.id
-  source_security_group_id = aws_security_group.lambda_sg.id
+  source_security_group_id = aws_security_group.addcard_lambda_sg.id
+}
+
+# Ingress rule to allow Lambda SG to connect
+resource "aws_security_group_rule" "ingress_getcards_lambda_to_sm_endpoint" {
+  # checkov:skip=CKV_AWS_23: "Ensure every security group and rule has a description"
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.secrets_endpoint_sg.id
+  source_security_group_id = aws_security_group.getCards_lambda_sg.id
+}
+
+# Ingress rule to allow Lambda SG to connect
+resource "aws_security_group_rule" "ingress_gettransactionhistory_lambda_to_sm_endpoint" {
+  # checkov:skip=CKV_AWS_23: "Ensure every security group and rule has a description"
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.secrets_endpoint_sg.id
+  source_security_group_id = aws_security_group.getTransactionHistory_lambda_sg.id
 }
 
 # Ingress rule to allow EC2 Jumphost SG to connect
