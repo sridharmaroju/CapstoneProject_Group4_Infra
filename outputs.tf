@@ -44,3 +44,7 @@ output "rds_port" {
 output "secret_arn" {
   value = aws_secretsmanager_secret.mysql.arn
 }
+
+output "ssm_parameter_name" {
+  value = aws_ssm_parameter.system_parameters.name
+}
