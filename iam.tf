@@ -27,11 +27,6 @@ resource "aws_iam_policy" "lambda_exec_role" {
          {
              "Effect": "Allow",
              "Action": [
-                 "dynamodb:GetItem",
-                 "dynamodb:PutItem",
-                 "dynamodb:DeleteItem",
-                 "dynamodb:Scan",
-                 "dynamodb:UpdateItem",
                  "secretsmanager:GetSecretValue",
                  "sqs:ReceiveMessage",
                  "sqs:DeleteMessage",
@@ -41,7 +36,9 @@ resource "aws_iam_policy" "lambda_exec_role" {
              "Resource": [
                   "${aws_secretsmanager_secret.mysql_connection_info.arn}",
                   "${aws_secretsmanager_secret.mysql.arn}",
-                  "${aws_sqs_queue.addcard_queue.arn}"
+                  "${aws_sqs_queue.addcard_queue.arn}",
+                  "${aws_sqs_queue.topup_queue.arn}",
+                  "${aws_sqs_queue.deduct_queue.arn}"
              ]
          },
          {
@@ -89,15 +86,19 @@ resource "aws_iam_role_policy" "apigw_sqs_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect   = "Allow"
-      Action   = "sqs:SendMessage"
-      Resource = aws_sqs_queue.addcard_queue.arn
+      Effect = "Allow"
+      Action = "sqs:SendMessage"
+      Resource = [
+        aws_sqs_queue.addcard_queue.arn,
+        aws_sqs_queue.topup_queue.arn,
+        aws_sqs_queue.deduct_queue.arn
+      ]
     }]
   })
 }
 
 resource "aws_iam_policy" "ec2_secrets_access" {
-  name = "ec2-secretsmanager-access"
+  name = "${var.name_prefix}-ec2-secretsmanager-access-${local.workspace_safe}"
 
   policy = jsonencode({
     Version = "2012-10-17"

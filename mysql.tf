@@ -43,7 +43,7 @@ resource "aws_db_instance" "mysql" {
   # checkov:skip=CKV_AWS_16: "Ensure all data stored in the RDS is securely encrypted at rest"
   # checkov:skip=CKV_AWS_129: "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled"
   # checkov:skip=CKV2_AWS_60: "Ensure RDS instance with copy tags to snapshots is enabled"
-  identifier                 = var.db_instance_name
+  identifier                 = "${var.name_prefix}-${var.db_instance_name}-${local.workspace_safe}"
   engine                     = "mysql"
   engine_version             = "8.0"
   instance_class             = var.rds_instance_class

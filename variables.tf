@@ -92,5 +92,5 @@ variable "db_name" {
 
 variable "db_instance_name" {
   type    = string
-  default = "ce11-capstone-group4-db-instance"
+  default = "db-instance"
 }

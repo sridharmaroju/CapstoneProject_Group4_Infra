@@ -35,8 +35,15 @@
 
 ![Add Card 04](/images/UI/AddCard04-Profile.JPG "Add Card 04")
 
-# Get Transactions
-![Get Transactions](/images/UI/GetTransactions.JPG "Get Transactions")
+# Topup
+![Topup 01](/images/UI/Topup01.JPG "Topup 01")
+
+![Topup 02](/images/UI/Topup02.JPG "Topup 02")
+
+# Deduct
+![Deduct 01](/images/UI/Deduct01.JPG "Deduct 01")
+
+![Decut 02](/images/UI/Deduct02.JPG "Deduct 02")
 
 ## INSTRUCTIONS
 * **Kindly read the output of CD and add the above REPO SECRETS as well as REPO VARIABLES**

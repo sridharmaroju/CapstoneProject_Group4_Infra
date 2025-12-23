@@ -17,7 +17,11 @@ resource "aws_api_gateway_deployment" "api" {
     aws_api_gateway_method.getTransactionHistory_post,
     aws_api_gateway_integration.getTransactionHistory_integration,
     aws_api_gateway_method.getCards_post,
-    aws_api_gateway_integration.getCards_integration
+    aws_api_gateway_integration.getCards_integration,
+    aws_api_gateway_method.topup_post,
+    aws_api_gateway_integration.topup_integration,
+    aws_api_gateway_method.deduct_post,
+    aws_api_gateway_integration.deduct_integration
   ]
 
   triggers = {
@@ -27,7 +31,11 @@ resource "aws_api_gateway_deployment" "api" {
       aws_api_gateway_method.getTransactionHistory_post.id,
       aws_api_gateway_integration.getTransactionHistory_integration.id,
       aws_api_gateway_method.getCards_post.id,
-      aws_api_gateway_integration.getCards_integration.id
+      aws_api_gateway_integration.getCards_integration.id,
+      aws_api_gateway_method.topup_post.id,
+      aws_api_gateway_integration.topup_integration.id,
+      aws_api_gateway_method.deduct_post.id,
+      aws_api_gateway_integration.deduct_integration.id
     ]))
   }
 }
