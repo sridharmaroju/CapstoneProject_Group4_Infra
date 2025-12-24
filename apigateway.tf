@@ -47,6 +47,7 @@ resource "aws_api_gateway_stage" "api_stage" {
   # checkov:skip=CKV2_AWS_51:Ensure AWS API Gateway endpoints uses client certificate authentication - Not Compliant
   # checkov:skip=CKV2_AWS_4:Ensure API Gateway stage have logging level defined as appropriate - Not Compliant
   # checkov:skip=CKV2_AWS_29:Ensure public API gateway are protected by WAF - Not Compliant
+  # checkov:skip=CKV2_AWS_77: "Ensure AWS API Gateway Rest API attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability"
   # Use the current workspace name for the stage name
   stage_name = local.workspace_safe
 

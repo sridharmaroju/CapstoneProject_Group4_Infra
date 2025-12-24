@@ -16,6 +16,10 @@
 * S3_BUCKET_FOR_TF_STATE_FILE = **ce11-capstone-group4**
 * AZS = **["us-east-1a","us-east-1b"]**
 
+## UI PORTAL
+* UI Portal is at https://github.com/RyanNguyen1808/CapstoneProject_Group4_Frontend
+* Follow the Instructions in Frontend Repo to deploy the UI PORTAL
+
 ## UI
 # Sign up
 ![Sign up 01](/images/UI/Signup1.JPG "Sign up 01")
