@@ -55,4 +55,4 @@
 ## TABLES SCHEMA
 ![Tables Schema](/images/Tables.JPG "Table Schema.")
 
-## THANK YOU VERY MUCH 1
+## THANK YOU VERY MUCH FOR READING TILL HERE
