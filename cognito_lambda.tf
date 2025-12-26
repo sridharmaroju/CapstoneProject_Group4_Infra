@@ -43,7 +43,7 @@ resource "aws_lambda_function" "post_confirmation" {
   # checkov:skip=CKV_AWS_173:Check encryption settings for Lambda environmental variable - Not Compliant
   # checkov:skip=CKV_AWS_115:Ensure that AWS Lambda function is configured for function-level concurrent execution limit - Not Compliant
   # checkov:skip=CKV_AWS_272:Ensure AWS Lambda function is configured to validate code-signing - Not Compliant
-  function_name = "${var.name_prefix}-cognito-post-confirmation-sns-${local.workspace_safe}"
+  function_name = "${var.name_prefix}-cognito-sns-${local.workspace_safe}"
   description   = "Lambda function to add verifired user into SNS for -${local.workspace_safe}"
   role          = aws_iam_role.cognito_lambda_role.arn
   handler       = "PostConfirmationSNS.handler"
